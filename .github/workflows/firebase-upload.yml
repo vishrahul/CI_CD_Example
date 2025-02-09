@@ -21,7 +21,7 @@ jobs:
           cache: 'yarn'  # Use 'npm' if you use npm
 
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --no-lockfile
 
       - name: Set up Java & Gradle
         uses: actions/setup-java@v3
