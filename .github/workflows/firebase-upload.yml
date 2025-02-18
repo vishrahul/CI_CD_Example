@@ -17,10 +17,9 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '17'
-        cache: 'yarn'
 
     - name: Install dependencies
-      run: yarn install --frozen-lockfile
+      run: npm install --frozen-lockfile
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
