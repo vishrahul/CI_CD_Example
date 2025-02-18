@@ -20,7 +20,7 @@ jobs:
         cache: 'yarn'
 
     - name: Install dependencies
-      yarn install --frozen-lockfile
+      run: yarn install --frozen-lockfile
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
