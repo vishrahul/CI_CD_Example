@@ -48,6 +48,6 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS="$HOME/firebase.json"
           echo "Firebase authentication successful"
 
-        - name: Deploy to Firebase
-         run: firebase deploy --only hosting
+      - name: Deploy to Firebase
+        run: firebase deploy --only hosting
      
