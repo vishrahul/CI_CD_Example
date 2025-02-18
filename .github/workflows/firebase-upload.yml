@@ -1,56 +1,37 @@
-name: Upload APK to Firebase
+name: Firebase Distribution
 
 on:
   push:
     branches:
-      - main  # Change to your deployment branch
+      - main  # or the branch you want to trigger the workflow
 
 jobs:
-  build-android:
-    name: Build & Upload to Firebase
+  build-and-distribute:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'yarn'  # Use 'npm' if you use npm
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'  # or the version your project uses
 
-      - name: Install Dependencies
-        run: yarn install --no-lockfile
+    - name: Install dependencies
+      run: npm install
 
-      - name: Set up Java & Gradle
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+    - name: Build Android App
+      run: |
+        cd android
+        ./gradlew assembleRelease
 
-      - name: Build Android APK
-        run: |
-          cd android
-          ./gradlew assembleRelease
+    - name: Install Firebase CLI
+      run: npm install -g firebase-tools
 
-      - name: Decode Firebase Credentials
-        run: |
-          echo '${{ secrets.FIREBASE_CREDENTIALS_JSON }}' | base64 --decode > $HOME/firebase.json
-          export GOOGLE_APPLICATION_CREDENTIALS="$HOME/firebase.json"
-
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-
-      - name: Authenticate Firebase CLI
-        run: |
-          echo '${{ secrets.FIREBASE_CREDENTIALS_JSON }}' | base64 --decode > $HOME/firebase.json
-          export GOOGLE_APPLICATION_CREDENTIALS="$HOME/firebase.json"
-          echo "Firebase authentication successful"
-
-      - name: Upload APK to Firebase App Distribution
-        run: |
-          firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk \
-            --app 948793746828:android:d57a856ad1f9d4165422a9 \
-            --groups testers \
-            --release-notes "New build uploaded via GitHub Actions"
+    - name: Distribute App via Firebase
+      run: |
+        firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk \
+          --app 948793746828:android:d57a856ad1f9d4165422a9 \
+          --groups "testers" \
+          --token "${{ secrets.FIREBASE_TOKEN }}"
