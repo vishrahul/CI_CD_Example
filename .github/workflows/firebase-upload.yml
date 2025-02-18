@@ -48,9 +48,6 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS="$HOME/firebase.json"
           echo "Firebase authentication successful"
 
-      - name: Upload APK to Firebase App Distribution
-        run: |
-          firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk \
-            --app 948793746828:android:d57a856ad1f9d4165422a9 \
-            --groups testers \
-            --release-notes "New build uploaded via GitHub Actions"
+        - name: Deploy to Firebase
+         run: firebase deploy --only hosting
+     
