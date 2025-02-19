@@ -1,45 +1,58 @@
-name: Firebase Distribution
+name: Build & Deploy React Native Android App
 
 on:
   push:
     branches:
-      - main
+      - main  # Change this if needed
 
 jobs:
-  build-and-distribute:
+  build-android:
+    name: Build Android APK & Deploy to Firebase
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '17'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
 
-    - name: Install dependencies
-      run: npm install --frozen-lockfile
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
 
-    - name: Install Firebase CLI
-      run: npm install -g firebase-tools
+      - name: Set up Java & Gradle
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-    - name: Clean Gradle Cache
-      run: cd android && ./gradlew clean
+      - name: Decode Firebase Credentials
+        run: |
+          echo '${{ secrets.FIREBASE_CREDENTIALS_JSON }}' | base64 --decode > $HOME/firebase.json
+          export GOOGLE_APPLICATION_CREDENTIALS="$HOME/firebase.json"
 
-    - name: Build Android App
-      run: |
-        cd android
-        ./gradlew assembleRelease
-      env:
-        ANDROID_KEYSTORE_FILE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-        ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-        ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-        ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
 
-    - name: Distribute Android App to Firebase
-      run: |
-        firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk \
-          --app 948793746828:android:d57a856ad1f9d4165422a9 \
-          --groups "testers" \
-          --token ${{ secrets.FIREBASE_TOKEN }}
+      - name: Clean Gradle Build Cache
+        run: cd android && ./gradlew clean
+
+      - name: Run React Native Autolinking
+        run: |
+          cd android
+          yarn react-native autolink
+
+      - name: Build Android APK
+        run: |
+          cd android
+          ./gradlew assembleRelease
+
+      - name: Upload APK to Firebase App Distribution
+        run: |
+          firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk \
+            --app 1:948793746828:android:d57a856ad1f9d4165422a9 \
+            --groups testers \
+            --release-notes "New build uploaded via GitHub Actions"
