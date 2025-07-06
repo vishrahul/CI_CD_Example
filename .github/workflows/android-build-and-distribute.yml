@@ -21,7 +21,7 @@
 
 
         - name: Build Release APK
-          run: ./gradlew assembleRelease
+          run:   cd android ./gradlew assembleRelease
 
         - name: Upload APK to Firebase App Distribution
           uses: wzieba/Firebase-Distribution-Github-Action@v1
