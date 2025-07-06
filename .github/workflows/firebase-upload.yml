@@ -1,20 +1,17 @@
-name: React Native Android CI
+name: Build and Distribute APK to Firebase
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build Android APK
     runs-on: ubuntu-latest
 
     steps:
-      - name: ⬇️ Checkout Repository
-        uses: main
+      - name: 🔄 Checkout Code
+        uses: actions/checkout@v3
 
       - name: ⚙️ Set up Node.js
         uses: actions/setup-node@v3
@@ -32,13 +29,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: 📲 Build APK
+      - name: 🏗️ Build APK (Release)
         run: |
           cd android
-          ./gradlew assembleDebug
+          ./gradlew assembleRelease
 
-      - name: 📤 Upload APK
-        uses: actions/upload-artifact@v3
+      - name: 🚀 Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          name: app-debug.apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: qa-team     # or use 'testers' or 'internal' groups
+          releaseNotes: "New build from GitHub Actions"
+          file: android/app/build/outputs/apk/release/app-release.apk
