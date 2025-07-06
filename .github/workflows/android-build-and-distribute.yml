@@ -21,7 +21,7 @@
 
 
         - name: Build Release APK
-          run: | 
+          run: 
           cd android 
           ./gradlew assembleDebug 
 
