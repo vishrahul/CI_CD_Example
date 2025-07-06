@@ -1,0 +1,33 @@
+    name: Android CI & Firebase Distribution
+
+    on:
+      push:
+        branches:
+          - main # or your desired branch
+
+    jobs:
+      build_and_distribute:
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v4
+
+        - name: Set up JDK 17
+          uses: actions/setup-java@v4
+          with:
+            distribution: 'temurin'
+            java-version: '17'
+
+        - name: Grant execute permission for gradlew
+          run: chmod +x gradlew
+
+        - name: Build Release APK
+          run: ./gradlew assembleRelease
+
+        - name: Upload APK to Firebase App Distribution
+          uses: wzieba/Firebase-Distribution-Github-Action@v1
+          with:
+            appId: ci-cd-example-7bd73 # Find this in Firebase Project settings -> General
+            token: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+            groups: All testers  # Or the name of your tester group
+            file: app/build/outputs/apk/release/app-release.apk # Adjust path if needed
