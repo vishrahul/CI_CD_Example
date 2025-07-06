@@ -45,10 +45,10 @@ jobs:
       #     cd android
       #     yarn react-native autolink
 
-      - name: Build Android APK
-        run: |
-          cd android
-          ./gradlew assembleRelease
+      # - name: Build Android APK
+      #   run: |
+      #     cd android
+      #     ./gradlew assembleRelease
 
       # - name: Upload APK to Firebase App Distribution
       #   run: |
