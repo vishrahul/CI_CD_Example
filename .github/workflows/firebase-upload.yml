@@ -29,13 +29,13 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Decode Firebase Credentials
-        run: |
-          echo '${{ secrets.FIREBASE_CREDENTIALS_JSON }}' | base64 --decode > $HOME/firebase.json
-          export GOOGLE_APPLICATION_CREDENTIALS="$HOME/firebase.json"
+      # - name: Decode Firebase Credentials
+      #   run: |
+      #     echo '${{ secrets.FIREBASE_CREDENTIALS_JSON }}' | base64 --decode > $HOME/firebase.json
+      #     export GOOGLE_APPLICATION_CREDENTIALS="$HOME/firebase.json"
 
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
+      # - name: Install Firebase CLI
+      #   run: npm install -g firebase-tools
 
       - name: Clean Gradle Build Cache
         run: cd android && ./gradlew clean
@@ -50,9 +50,9 @@ jobs:
           cd android
           ./gradlew assembleRelease
 
-      - name: Upload APK to Firebase App Distribution
-        run: |
-          firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk \
-            --app 1:948793746828:android:d57a856ad1f9d4165422a9 \
-            --groups testers \
-            --release-notes "New build uploaded via GitHub Actions"
+      # - name: Upload APK to Firebase App Distribution
+      #   run: |
+      #     firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk \
+      #       --app 1:948793746828:android:d57a856ad1f9d4165422a9 \
+      #       --groups testers \
+      #       --release-notes "New build uploaded via GitHub Actions"
