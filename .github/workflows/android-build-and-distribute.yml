@@ -24,4 +24,4 @@
             appId: ci-cd-example-7bd73 # Find this in Firebase Project settings -> General
             token: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
             groups: All testers  # Or the name of your tester group
-            file: app/build/outputs/apk/release/app-release.apk # Adjust path if needed
+            file: android/app/build/outputs/apk/release/app-release.apk # Adjust path if needed
