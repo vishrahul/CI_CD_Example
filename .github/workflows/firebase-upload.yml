@@ -40,10 +40,10 @@ jobs:
       # - name: Clean Gradle Build Cache
       #   run: cd android && ./gradlew clean
 
-      - name: Run React Native Autolinking
-        run: |
-          cd android
-          yarn react-native autolink
+      # - name: Run React Native Autolinking
+      #   run: |
+      #     cd android
+      #     yarn react-native autolink
 
       - name: Build Android APK
         run: |
