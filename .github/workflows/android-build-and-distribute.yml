@@ -21,6 +21,6 @@
           uses: wzieba/Firebase-Distribution-Github-Action@v1
           with:
             appId: ci-cd-example-7bd73 # Find this in Firebase Project settings -> General
-            token: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+            token: AIzaSyCPktapEM1V4x-9901oAy1s2ZzHydGD6D8
             groups: All testers  # Or the name of your tester group
             file: android/app/build/outputs/apk/release/app-release.apk # Adjust path if needed
