@@ -41,8 +41,8 @@ jobs:
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{ secrets.FIREBASE_APP_ID }}
-          serviceCredentialsFile: $HOME/service-account.json
-          groups: qa-team
+          appId: ci-cd-example-7bd73
+          serviceCredentialsFile: $HOME/google-services.json
+          groups: Test
           releaseNotes: "Uploaded via GitHub Actions"
           file: android/app/build/outputs/apk/release/app-release.apk
