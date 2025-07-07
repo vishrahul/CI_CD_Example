@@ -4,7 +4,6 @@
       push:
         branches:
           - main # or your desired branch
-
     jobs:
       build_and_distribute:
         runs-on: ubuntu-latest
